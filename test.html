@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Test</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        .con {
+            display: flex;
+            justify-content: start;
+            align-items: self-start;
+            /* margin: 50px auto; */
+            padding: 40px;
+        }
+
+        form,.result {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            padding: 40px;
+            gap: 10px;
+            border: 1px solid grey;
+            margin: 20px auto;
+            border-radius: 5px;
+            background-color: rgb(92, 92, 198);
+            color: white;
+        }
+
+        input,
+        select {
+            height: 40px;
+            border: 1px solid grey;
+            border-radius: 5px;
+            padding:  0px 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="con">
+        <!-- <h1>Student Result & Eligibility Analyzer</h1> -->
+        <form id="form">
+            <label for="student_name">Student Name</label><input type="text" id="student_name">
+            <label for="student_id">Student Id</label><input type="text" id="student_id">
+            <label for="student_email">Email</label><input type="text" id="student_email">
+            <label for="student_department">Department</label>
+            <select id="student_department">
+                <option value="javafullstack">Java Full Stack</option>
+                <option value="pythonfullstack">Python Full Stack</option>
+                <option value="mern">MERN Stack</option>
+                <option value="dataanalytics">Data Analytics</option>
+            </select>
+            <label for="student_mark">Marks</label><input type="text" id="student_mark">
+
+            <button type="submit">Submit</button>
+            <p id="error"></p>
+        </form>
+        <div class="result">
+            <h3>Student Result</h3>
+            <p>Name :<span id="resultName"></span></p>
+            <p>Student ID :<span id="resultId"></span> </p>
+            <p>Email :<span id="resultEmail"></span> </p>
+            <p>Department :<span id="resultDepartment"></span></p>
+            <p id="suggestion"></p>
+            <p> Mark :<span id="resultMark"></span></p>
+            <p> Grade :<span id="grade"></span> </p>
+            <p>Result : <span id="res"></span></p>
+
+            <p> Performance :<span id="performance"></span></p>
+
+            <p>Eligibility : <span id="eligi"></span></p>
+
+        </div>
+    </div>
+    <script>
+        document.getElementById("form").addEventListener('submit', function (event) {
+            event.preventDefault();
+            console.log("form submitted");
+            let s_name = document.getElementById("student_name").value;
+            let s_id = document.getElementById("student_id").value;
+            let s_email = document.getElementById("student_email").value;
+            let s_marks = document.getElementById("student_mark").value;
+            let s_department = document.getElementById("student_department").value;
+
+
+
+            s_name = s_name.trim();
+            if (s_name == "" || s_id == "" || s_email == "") {
+                console.log("Fill all Fields")
+                document.getElementById("error").innerHTML = "Fill all Fields"
+                return;
+            }
+            s_name = s_name.toUpperCase();
+            document.getElementById("student_name").value = s_name;
+            console.log(s_name);
+
+            console.log(s_id);
+            let validStart = s_id.startsWith("STU");
+            let validLen = s_id.length == 6;
+            if (!validLen) {
+                document.getElementById("error").innerHTML = "Invalid Id.."
+                return;
+            }
+
+            if (!validStart) {
+                document.getElementById("error").innerHTML = "Please start with STU"
+                return;
+            };
+            document.getElementById("student_id").value = s_id;
+            console.log(s_id);
+
+            let validEmail = s_email.includes("@") && s_email.includes(".");
+            if (!validEmail) {
+                document.getElementById("error").innerHTML = "Invalid Email.."
+                return;
+            }
+            document.getElementById("student_email").value = s_email;
+
+            if (s_marks < 0 || s_marks > 100) {
+                document.getElementById("error").innerHTML = "Invalid Marks"
+            }
+            if (s_marks >= 90 && s_marks <= 100) {
+                document.getElementById("grade").innerHTML = "A++"
+            }
+            else if (s_marks >= 80 && s_marks <= 89) {
+                document.getElementById("grade").innerHTML = "A"
+            }
+            else if (s_marks >= 70 && s_marks <= 79) {
+                document.getElementById("grade").innerHTML = "B"
+            }
+            else if (s_marks >= 60 && s_marks <= 69) {
+                document.getElementById("grade").innerHTML = "C"
+            }
+            else if (s_marks >= 50 && s_marks <= 59) {
+                document.getElementById("grade").innerHTML = "D"
+            }
+            else if (s_marks < 50) {
+                document.getElementById("grade").innerHTML = "F"
+            }
+            else {
+                document.getElementById("grade").innerHTML = "F"
+
+            }
+
+            if (s_marks >= 50) {
+                document.getElementById("res").innerHTML = "PASS"
+            } else {
+                document.getElementById("res").innerHTML = "FAIL"
+            }
+
+            if (s_marks >= 60 && validEmail && validStart) {
+                document.getElementById("eligi").innerHTML = "Eligible for Next Level"
+            } else {
+                document.getElementById("eligi").innerHTML = "Not Eligible"
+            }
+
+
+
+            switch (s_department) {
+                case "javafullstack":
+                    document.getElementById("suggestion").innerHTML = "Recommended Advanced Java & Spring Boot"
+                    break;
+                case "pythonfullstack":
+                    document.getElementById("suggestion").innerHTML = "Recommended Django & REST API"
+                    break;
+                case "mern":
+                    document.getElementById("suggestion").innerHTML = "Recommended React & Node.js"
+                    break;
+                case "dataanalytics":
+                    document.getElementById("suggestion").innerHTML = "Recommended Data Science & Power BI"
+                    break;
+            }
+
+            let performance = s_marks >= 80
+                ? "Excellent"
+                : s_marks >= 60
+                    ? "Good"
+                    : "Needs Improvement";
+            document.getElementById("performance").innerHTML = performance;
+            document.getElementById("resultName").innerHTML = s_name;
+            document.getElementById("resultId").innerHTML = s_id;
+            document.getElementById("resultEmail").innerHTML = s_email;
+            document.getElementById("resultDepartment").innerHTML =
+                s_department;
+            document.getElementById("resultMark").innerHTML =
+                s_marks;
+        })
+
+    </script>
+</body>
+
+</html>
